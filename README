@@ -1,0 +1,8 @@
+Install the required dependencies:
+1. pipenv install
+2. pipenv shell
+
+Install the required packages:
+1. pip install flask SpeechRecognition nltk gTTS spacy playsound openai python-dotenv pyaudio pyobjc
+2. python -m spacy download en_core_web_sm
+
