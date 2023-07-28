@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from listen_and_respond import listen_and_respond
 from weather import get_weather
 from ask_gpt3 import ask_gpt3
@@ -13,17 +14,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
 NEWS_API_KEY = os.getenv("NEWSAPI")
 yelp_api_key = os.getenv("YELPAPI")
 
-@app.get('/get-weather')
-def get_weather_route():
-    city = request.args.get('city')
-    print(city)
-    weather_info = get_weather(city)
+# @app.get('/get-weather')
+# def get_weather_route():
+#     city = request.args.get('city')
+#     print(city)
+#     weather_info = get_weather(city)
 
-    return jsonify({'weather_info': weather_info})
+#     return jsonify({'weather_info': weather_info})
 
 
 @app.get('/ask-gpt3')
@@ -41,10 +43,13 @@ def get_location():
 
 @app.get('/get-news')
 def get_news_route():
-    query = request.args.get('query')
+    
+    print(request.args)
+    
+    query = request.args.get('q')
     source = request.args.get('source')
     news_data = get_news(query, source)
-    url = f"https://newsapi.org/v2/top-headlines?apiKey={NEWS_API_KEY}&q={query}&sources={source}"
+    url = f"https://newsapi.org/v2/top-headlines?apiKey={NEWS_API_KEY}?q={query}&sources={source}"
     return jsonify(news_data)
 
 

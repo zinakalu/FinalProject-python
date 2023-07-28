@@ -11,12 +11,16 @@ def get_news(query=None, source=None):
     url = "https://newsapi.org/v2/top-headlines"
     params = {"apiKey": NEWS_API_KEY }
 
+    print(query)
+
     if query:
         params["q"] = query
 
     if source:
         params["sources"] = source
-
+    
+    print(params)
+    
     response = requests.get(url, params=params)
     data = response.json()
     return data

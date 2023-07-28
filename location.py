@@ -16,4 +16,4 @@ def get_location():
     country = data['country_name']
     current_location = f'{city}, {country}'
 
-    return {"current_location": current_location}
+    return current_location
