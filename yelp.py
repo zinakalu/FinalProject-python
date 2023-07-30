@@ -31,9 +31,11 @@ def business_search(search_type, location):
         'open_now': True
     }
     response = requests.get(url=endpoint, params=parameters, headers=headers)
-    business_data = response.json()
+    # business_data = response.json()
 
-    return business_data['businesses']
+    # return business_data['businesses']
+    data = response.json()
+    return data
 
 
 def respond_to_yelp_request(question, speak):

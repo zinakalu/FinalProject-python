@@ -1,14 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, url_for, session, redirect
 from flask_cors import CORS
 from listen_and_respond import listen_and_respond
 from weather import get_weather
 from ask_gpt3 import ask_gpt3
 import location
 import os
+import secrets
+import music
 import yelp
 import requests
 from news import get_news
 from dotenv import load_dotenv
+from requests_html import HTMLSession
 
 
 load_dotenv()
@@ -19,13 +22,23 @@ CORS(app)
 NEWS_API_KEY = os.getenv("NEWSAPI")
 yelp_api_key = os.getenv("YELPAPI")
 
-# @app.get('/get-weather')
-# def get_weather_route():
-#     city = request.args.get('city')
-#     print(city)
-#     weather_info = get_weather(city)
 
-#     return jsonify({'weather_info': weather_info})
+@app.post('/song')
+def create_song():
+    song = request.form.get('song')
+    video_id = search_song(api_key, song)
+
+    return jsonify({'video_id': video_id})
+
+
+#Weather
+@app.get('/get-weather')
+def get_weather_route():
+    city = request.args.get('city')
+    print(city)
+    weather_info = get_weather(city)
+
+    return jsonify({'weather_info': weather_info})
 
 
 @app.get('/ask-gpt3')

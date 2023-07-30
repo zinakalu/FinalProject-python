@@ -5,4 +5,6 @@ Install the required dependencies:
 Install the required packages:
 1. pip install flask SpeechRecognition nltk gTTS spacy playsound openai python-dotenv pyaudio pyobjc
 2. python -m spacy download en_core_web_sm
+3. pip install google-api-python-client Flask-Bootstrap
+
 

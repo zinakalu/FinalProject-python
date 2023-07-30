@@ -1,14 +1,14 @@
 import requests
 import json
 import datetime as dt
-# from dotenv import load_dotenv
-# import os
+from dotenv import load_dotenv
+import os
 
 
 
 
-# load_dotenv()
-# print(os.getenv('WEATHERAPI'))
+load_dotenv()
+
 
 
 def kelvin_to_celsius_fahrenheit(kelvin):
@@ -20,8 +20,9 @@ def kelvin_to_celsius_fahrenheit(kelvin):
 # print(response)
 
 def get_weather(city):
+    WEATHER_KEY = os.getenv("WEATHERAPI")
     base_url = "http://api.openweathermap.org/data/2.5/forecast?"
-    weather_api_key = "11a9a5df58687911039ff94b9f8cb010"
+    weather_api_key =  WEATHER_KEY
 
     url = base_url + "appid=" + weather_api_key + "&q=" + city
     response = requests.get(url).json()
