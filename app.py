@@ -19,13 +19,17 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+
+
 NEWS_API_KEY = os.getenv("NEWSAPI")
 yelp_api_key = os.getenv("YELPAPI")
 
 
 @app.post('/song')
 def create_song():
-    song = request.form.get('song')
+    song = request.args.get('song')
+    # song = request.form.get('song')
+    api_key = os.getenv("MUSICAPI")
     video_id = search_song(api_key, song)
 
     return jsonify({'video_id': video_id})
