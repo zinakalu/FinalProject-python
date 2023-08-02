@@ -1,6 +1,7 @@
-import spotipy
+# import spotipy
 import time
 import os
+import pprint
 
 from dotenv import load_dotenv
 from googleapiclient.discovery import build
@@ -9,6 +10,8 @@ load_dotenv()
 api_key = os.getenv("MUSICAPI")
 
 def search_song(api_key, song):
+    print(song)
+
     youtube = build('youtube', 'v3', developerKey=api_key)
 
     request = youtube.search().list(
@@ -19,7 +22,7 @@ def search_song(api_key, song):
 
     response = request.execute()
 
-    print(response)
+    pprint.pprint(response['items'][0]['id']['videoId'])
 
     if response['items']:
         return response['items'][0]['id']['videoId']
@@ -27,4 +30,4 @@ def search_song(api_key, song):
     else:
         return None
 
-search_song(api_key, "Firework")
+search_song(api_key, "countdown")

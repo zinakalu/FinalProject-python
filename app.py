@@ -6,7 +6,7 @@ from ask_gpt3 import ask_gpt3
 import location
 import os
 import secrets
-import music
+from music import search_song
 import yelp
 import requests
 from news import get_news
@@ -28,7 +28,10 @@ yelp_api_key = os.getenv("YELPAPI")
 @app.post('/song')
 def create_song():
     song = request.args.get('song')
+    print(f"SONG SONG SONG: {song}")
     # song = request.form.get('song')
+    # data = request.get_json()
+    # song = data.get('song')
     api_key = os.getenv("MUSICAPI")
     video_id = search_song(api_key, song)
 
