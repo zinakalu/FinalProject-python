@@ -6,7 +6,7 @@ from ask_gpt3 import ask_gpt3
 import location
 import os
 import secrets
-# from music import search_song
+from music import search_song
 import yelp
 import requests
 from news import get_news
@@ -25,13 +25,32 @@ NEWS_API_KEY = os.getenv("NEWSAPI")
 yelp_api_key = os.getenv("YELPAPI")
 
 
+
+@app.post('/get_recipe')
+def get_recipe():
+    data = request.get_json()  # get data from POST request
+
+    url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch"
+
+    headers = {
+        "X-RapidAPI-Key": "YOUR_SPOONACULAR_API_KEY",
+        "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+    }
+
+    response = requests.get(url, headers=headers, params=data)
+
+    return jsonify(response.json())
+
+
+
 @app.post('/song')
 def create_song():
-    song = request.args.get('song')
-    print(f"SONG SONG SONG: {song}")
+    # song = request.args.get('song')
     # song = request.form.get('song')
-    # data = request.get_json()
-    # song = data.get('song')
+    data = request.get_json()
+    song = data
+    print(f"THIS IS THE DATA: {data}")
+    # print(f"SONG SONG SONG: {song}")
     api_key = os.getenv("MUSICAPI")
     video_id = search_song(api_key, song)
 
