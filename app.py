@@ -85,10 +85,10 @@ def get_news_route():
     
     print(request.args)
     
-    query = request.args.get('q')
-    source = request.args.get('source')
-    news_data = get_news(query, source)
-    url = f"https://newsapi.org/v2/top-headlines?apiKey={NEWS_API_KEY}?q={query}&sources={source}"
+    # query = request.args.get('q')
+    sources = request.args.get('sources')
+    news_data = get_news(sources)
+    url = f"https://newsapi.org/v2/top-headlines?apiKey={NEWS_API_KEY}&sources={sources}"
     return jsonify(news_data)
 
 
