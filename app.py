@@ -12,6 +12,7 @@ import requests
 from news import get_news
 from dotenv import load_dotenv
 from requests_html import HTMLSession
+from capitals import get_country_info, handle_query
 
 
 load_dotenv()
@@ -26,31 +27,39 @@ yelp_api_key = os.getenv("YELPAPI")
 
 
 
-@app.post('/get_recipe')
-def get_recipe():
-    data = request.get_json()  # get data from POST request
+# @app.get('/get-username')
+# data = request.
 
-    url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch"
+@app.get('/country_info')
+def country_info():
+    country = request.args.get('country')
+    info = get_country_info(country)
+    print(info)
 
-    headers = {
-        "X-RapidAPI-Key": "YOUR_SPOONACULAR_API_KEY",
-        "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
-    }
+    return jsonify({'country_info': info})
 
-    response = requests.get(url, headers=headers, params=data)
+# @app.post('/get_recipe')
+# def get_recipe():
+#     data = request.get_json()  # get data from POST request
 
-    return jsonify(response.json())
+#     url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch"
+
+#     headers = {
+#         "X-RapidAPI-Key": "YOUR_SPOONACULAR_API_KEY",
+#         "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+#     }
+
+#     response = requests.get(url, headers=headers, params=data)
+
+#     return jsonify(response.json())
 
 
 
 @app.post('/song')
 def create_song():
-    # song = request.args.get('song')
-    # song = request.form.get('song')
     data = request.get_json()
     song = data
     print(f"THIS IS THE DATA: {data}")
-    # print(f"SONG SONG SONG: {song}")
     api_key = os.getenv("MUSICAPI")
     video_id = search_song(api_key, song)
 
@@ -83,11 +92,10 @@ def get_location():
 @app.get('/get-news')
 def get_news_route():
     
-    print(request.args)
-    
-    # query = request.args.get('q')
+    print('💞',request.args)
     sources = request.args.get('sources')
-    news_data = get_news(sources)
+    news_data = handle_query(sources)
+    # news_data = get_news(sources)
     url = f"https://newsapi.org/v2/top-headlines?apiKey={NEWS_API_KEY}&sources={sources}"
     return jsonify(news_data)
 
@@ -114,22 +122,6 @@ def get_reviews():
 
     return jsonify(review_data)
 
-@app.post('/interact')
-def create_interaction():
-    user_input = request.get_json('user_input')
-    user_id = request.get_json('user_id')
-    user = User.query.filter(user.id == id).first()
-
-
-    if user is None:
-        return {'message': 'User not found'}, 404
-
-    
-    new_interaction = UserInteractionWithVirtualAssistant(
-        user_input_speech=user_input,
-        user_id=user.id
-    )
-    db.session.add(new_interaction)
 
 
 
