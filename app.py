@@ -13,6 +13,8 @@ from news import get_news
 from dotenv import load_dotenv
 from requests_html import HTMLSession
 from capitals import get_country_info, handle_query
+from translate import translate_text
+
 
 
 load_dotenv()
@@ -29,6 +31,24 @@ yelp_api_key = os.getenv("YELPAPI")
 
 # @app.get('/get-username')
 # data = request.
+
+
+@app.post('/translate')
+def translate_text_route():
+    data = request.get_json()
+    text = data.get('text')
+    target_language = data.get('target')
+    print('😏workkkk',target_language)
+
+
+    if text and target_language:
+        translated_text = translate_text(text, target_language)
+        print('🤞🏾🤞🏾', translated_text)
+        return jsonify({'translatedText': translated_text})
+
+    else:
+        return jsonify({'error': 'Invalid input'}), 400
+        
 
 @app.get('/country_info')
 def country_info():
