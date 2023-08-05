@@ -37,12 +37,12 @@ yelp_api_key = os.getenv("YELPAPI")
 def translate_text_route():
     data = request.get_json()
     text = data.get('text')
-    target_language = data.get('target')
-    print('😏workkkk',target_language)
+    target = data.get('target')
+    print('😏workkkk',target)
 
 
-    if text and target_language:
-        translated_text = translate_text(text, target_language)
+    if text and target:
+        translated_text = translate_text(text, target)
         print('🤞🏾🤞🏾', translated_text)
         return jsonify({'translatedText': translated_text})
 

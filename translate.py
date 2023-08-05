@@ -8,10 +8,10 @@ translate_client = gtranslate.Client.from_service_account_json("/Users/zinakalu/
 
 
 
-def translate_text(text, target_language):
-    result = translate_client.translate(text, target_language=target_language)
+def translate_text(text, target):
+    result = translate_client.translate(text, target)
     translated_text = result['translatedText']
     return translated_text
 
 
-print(translate_text("hello", "ig"))
+# print(translate_text("hello", "ig"))
