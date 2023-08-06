@@ -17,8 +17,6 @@ def kelvin_to_celsius_fahrenheit(kelvin):
     return celsius, fahrenheit
 
 
-# print(response)
-
 def get_weather(city):
     WEATHER_KEY = os.getenv("WEATHERAPI")
     base_url = "http://api.openweathermap.org/data/2.5/forecast?"
@@ -26,7 +24,7 @@ def get_weather(city):
 
     url = base_url + "appid=" + weather_api_key + "&q=" + city
     response = requests.get(url).json()
-    # print(response)
+    print(response)
     forecast = response['list'][0]
     temp_kelvin = forecast['main']['temp']
     temp_celsius, temp_fahrenheit = kelvin_to_celsius_fahrenheit(temp_kelvin)
@@ -34,8 +32,8 @@ def get_weather(city):
     feels_like_celsius, feels_like_fahrenheit = kelvin_to_celsius_fahrenheit(feels_like_kelvin)
     description = forecast['weather'][0]['description']
 
-    weather_info = (f"Temperature in {city}: {temp_celsius:.0f}°C or if you're American {temp_fahrenheit:.0f}°F "
-                    f"It feels like: {feels_like_fahrenheit:.0f}°F " #these two lines this and below don't work yet
-                    f"General Weather in {city} is: {description}"
+    weather_info = (f"{temp_fahrenheit:.0f}°F "
+                    f"It feels like: {feels_like_fahrenheit:.0f}°F " 
+                    f"The general weather in {city} is: {description}"
     )
     return weather_info

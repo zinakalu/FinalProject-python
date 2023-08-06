@@ -143,6 +143,20 @@ def get_reviews():
     return jsonify(review_data)
 
 
+@app.post('/add_task/<task>')
+def add_task(task):
+    if 'tasks' not in session:
+        session['tasks'] = {}
+    
+    if task in session['tasks']:
+        session['tasks'][task] +=1
+    else:
+        session['tasks'][task] = 1
+    return jsonify(success=True)
+
+@app.get('/get_summary')
+def get_summary():
+    return jsonify(session.get('tasks', {}))
 
 
 if __name__ == "__main__":
