@@ -14,6 +14,9 @@ from dotenv import load_dotenv
 from requests_html import HTMLSession
 from capitals import get_country_info, handle_query
 from translate import translate_text
+# from sendgrid import SendGridAPIClient
+# from sendgrid.helpers.mail import Mail
+from email_sender import send_questions_email
 
 
 
@@ -23,15 +26,26 @@ app = Flask(__name__)
 CORS(app)
 
 
-
+# SENDGRID_API_KEY = os.getenv("email_key")
 NEWS_API_KEY = os.getenv("NEWSAPI")
 yelp_api_key = os.getenv("YELPAPI")
 
 
 
-# @app.get('/get-username')
-# data = request.
+@app.post('/send-email')
+def send_email():
+    data = request.json
+    email = data['email']
+    questions = data['questions']
 
+    email_sender = 'pythontestingphase3@gmail.com'
+    email_password = os.getenv("email_key")
+
+    try:
+        send_questions_email(email_sender, email_password, email, questions)
+        return jsonify({"message": "Email sent successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @app.post('/translate')
 def translate_text_route():
@@ -48,7 +62,7 @@ def translate_text_route():
 
     else:
         return jsonify({'error': 'Invalid input'}), 400
-        
+    
 
 @app.get('/country_info')
 def country_info():
@@ -57,22 +71,6 @@ def country_info():
     print(info)
 
     return jsonify({'country_info': info})
-
-# @app.post('/get_recipe')
-# def get_recipe():
-#     data = request.get_json()  # get data from POST request
-
-#     url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch"
-
-#     headers = {
-#         "X-RapidAPI-Key": "YOUR_SPOONACULAR_API_KEY",
-#         "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
-#     }
-
-#     response = requests.get(url, headers=headers, params=data)
-
-#     return jsonify(response.json())
-
 
 
 @app.post('/song')
@@ -142,21 +140,6 @@ def get_reviews():
 
     return jsonify(review_data)
 
-
-@app.post('/add_task/<task>')
-def add_task(task):
-    if 'tasks' not in session:
-        session['tasks'] = {}
-    
-    if task in session['tasks']:
-        session['tasks'][task] +=1
-    else:
-        session['tasks'][task] = 1
-    return jsonify(success=True)
-
-@app.get('/get_summary')
-def get_summary():
-    return jsonify(session.get('tasks', {}))
 
 
 if __name__ == "__main__":
