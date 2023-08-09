@@ -14,29 +14,66 @@ from dotenv import load_dotenv
 from requests_html import HTMLSession
 from capitals import get_country_info, handle_query
 from translate import translate_text
-# from sendgrid import SendGridAPIClient
-# from sendgrid.helpers.mail import Mail
 from email_sender import send_questions_email
+from database import db
+from flask_migrate import Migrate
+from models import User, Question
 
 
 
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,origins=["http://localhost:3000"])
 
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///questions.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+migrate= Migrate(app,db)
+db.init_app(app)
 
 # SENDGRID_API_KEY = os.getenv("email_key")
 NEWS_API_KEY = os.getenv("NEWSAPI")
 yelp_api_key = os.getenv("YELPAPI")
 
+# @app.post('/save-question')
+# def save_question():
+#     data = request.json
+#     question_content = data.get('question')
+#     username = data.get('username')
+#     email = data.get('email')
+#     print(email)
 
+#     user = User.query.filter_by(email=email).first()
+#     if not user:
+#         user = User(username=username, email=email)
+#         db.session.add(user)
+#         db.session.commit()
+
+#     new_question = Question(content=question_content, user=user)
+#     user.questions.append(new_question)
+
+#     db.session.add(new_question)
+#     db.session.commit()
+
+#     return jsonify({"message": "Quuestion saved successfully"}), 201
+
+
+# @app.get('/get-questions')
+# def get_questions():
+#     email = request.args.get('email')
+#     user = User.query.filter_by(email=email).first()
+#     if not user:
+#         return jsonify({"error": "User not found!"}), 400
+
+#     questions = [q.content for q in user.questions]
+#     return jsonify({"questions": questions}), 200
 
 @app.post('/send-email')
 def send_email():
-    data = request.json
+    data = request.get_json()
     email = data['email']
     questions = data['questions']
+    print(questions)
 
     email_sender = 'pythontestingphase3@gmail.com'
     email_password = os.getenv("email_key")
@@ -109,11 +146,8 @@ def get_location():
 
 @app.get('/get-news')
 def get_news_route():
-    
-    print('💞',request.args)
     sources = request.args.get('sources')
     news_data = handle_query(sources)
-    # news_data = get_news(sources)
     url = f"https://newsapi.org/v2/top-headlines?apiKey={NEWS_API_KEY}&sources={sources}"
     return jsonify(news_data)
 
@@ -139,7 +173,6 @@ def get_reviews():
     review_data = response.json()
 
     return jsonify(review_data)
-
 
 
 if __name__ == "__main__":

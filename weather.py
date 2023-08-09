@@ -33,7 +33,6 @@ def get_weather(city):
     description = forecast['weather'][0]['description']
 
     weather_info = (f"{temp_fahrenheit:.0f}°F "
-                    f"It feels like: {feels_like_fahrenheit:.0f}°F " 
                     f"The general weather in {city} is: {description}"
     )
     return weather_info
